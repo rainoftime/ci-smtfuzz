@@ -1,0 +1,51 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.env
+.venv
+
+# Project specific
+ET/
+results/
+targets/
+solver/
+*.sqlite3
+*.tar.gz
+*.tar.bz2
+*.tgz
+*.zip
+
+# Temporary files
+*.tmp*
+temp/
+
+# Downloaded binaries
+z3
+smtrat-static
+opensmt
+ostrich
+stp
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.cursor
+.cursor-blink
+.cursor-underline
+
+# OS specific
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db

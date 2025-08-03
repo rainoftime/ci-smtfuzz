@@ -50,22 +50,27 @@ def main():
     success, latest_version, download_url = fetch_mathsat_binary()
     if success:
         current_version = read_version(repo)
+        
+        # 只有当版本发生变化时才进行更新和设置version_changed为true
+        version_changed = current_version != latest_version
+        
+        if version_changed:
+            local_filename = f"mathsat-{latest_version}-linux-x86_64.tar.gz"
+            download_file(download_url, local_filename)
+            extract_file(local_filename, extract_to='./', rename_to="solver", folder_prefix="mathsat-")
+            os.chmod(path_to_solver_binary, 0o755)
 
-        local_filename = f"mathsat-{latest_version}-linux-x86_64.tar.gz"
-        download_file(download_url, local_filename)
-        extract_file(local_filename, extract_to='./', rename_to="solver", folder_prefix="mathsat-")
-        os.chmod(path_to_solver_binary, 0o755)
+            write_to_file("./solvers.cfg", "./solver/bin/mathsat")
 
-        write_to_file("./solvers.cfg", "./solver/bin/mathsat")
-
-        write_version(repo, latest_version)
-
+            write_version(repo, latest_version)
+        
         with open(os.getenv('GITHUB_OUTPUT'), 'a') as github_output:
-            github_output.write('version_changed=true\n')
+            github_output.write(f'version_changed={str(version_changed).lower()}\n')
 
-        for theory in theories:
-            prepare_directories(theory)
-            generate_tests(theory, NUM_TESTS)
+        if version_changed:
+            for theory in theories:
+                prepare_directories(theory)
+                generate_tests(theory, NUM_TESTS)
     else:
         print("Failed to download MathSAT binary.")
 
